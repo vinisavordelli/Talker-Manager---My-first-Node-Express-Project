@@ -37,6 +37,22 @@ app.get('/talker', async (_req, res) => {
   return res.status(HTTP_OK_STATUS).json(talkers);
 });
 
+app.post('/talker',
+validateAuth,
+validateName,
+validateAge,
+validateTalk,
+validateLastWatched,
+validateRate, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const talkers = JSON.parse(await fs.readFile('./talker.json'));
+  const newTalker = { id: talkers.length + 1, name, age, talk };
+  talkers.push(newTalker);
+
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  res.status(201).json(newTalker);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
 

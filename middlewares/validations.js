@@ -38,8 +38,7 @@ const validateAuth = (req, res, next) => {
   const { authorization } = req.headers;
   const regex = /^[a-zA-Z0-9]{16}$/;
   const tokenValidation = regex.test(String(authorization));
-
-  if (!(tokenValidation)) {
+  if (!tokenValidation) {
     return res.status(401).json({ message: 'Token inválido' });
     }
     
