@@ -97,4 +97,4 @@ const validateRate = (req, res, next) => {
 next();  
 };
 
-module.exports = { validateEmail, validatePassword, validateAuth, validateName };
+module.exports = { validateEmail, validatePassword, validateAuth, validateName, validateLastWatched, validateRate };
