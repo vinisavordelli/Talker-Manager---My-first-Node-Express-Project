@@ -5,6 +5,8 @@ const fs = require('fs').promises;
 const app = express();
 app.use(bodyParser.json());
 
+const talkersFile = './talker.json';
+
 const {
   validateEmail,
   validatePassword,
@@ -30,7 +32,7 @@ app.post('/login', validateEmail, validatePassword, async (_req, res) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const talkers = JSON.parse(await fs.readFile('./talker.json'));
+  const talkers = JSON.parse(await fs.readFile(talkersFile));
 
   if (!talkers) return res.status(HTTP_OK_STATUS).json([]);
 
@@ -45,11 +47,11 @@ validateTalk,
 validateLastWatched,
 validateRate, async (req, res) => {
   const { name, age, talk } = req.body;
-  const talkers = JSON.parse(await fs.readFile('./talker.json'));
+  const talkers = JSON.parse(await fs.readFile(talkersFile));
   const newTalker = { id: talkers.length + 1, name, age, talk };
   talkers.push(newTalker);
 
-  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  await fs.writeFile(talkersFile, JSON.stringify(talkers));
   res.status(201).json(newTalker);
 });
 
@@ -63,19 +65,19 @@ validateRate, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
 
-  const talkers = await JSON.parse(await fs.readFile('./talker.json'));
+  const talkers = await JSON.parse(await fs.readFile(talkersFile));
 
   const identifier = talkers.findIndex((talker) => talker.id === +id);
   talkers[identifier] = { id: +id, name, age, talk };
 
-  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  await fs.writeFile(talkersFile, JSON.stringify(talkers));
   res.status(200).json(talkers[identifier]);
 });
 
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
 
-  const allTalkers = JSON.parse(await fs.readFile('./talker.json'));
+  const allTalkers = JSON.parse(await fs.readFile(talkersFile));
 
   const talker = await allTalkers.find((currentTalker) => currentTalker.id === parseInt(id, 10));
 
