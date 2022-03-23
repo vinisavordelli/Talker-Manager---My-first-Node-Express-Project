@@ -76,6 +76,18 @@ const validateAge = (req, res, next) => {
   next();
 };
 
+const validateLastWatched = (req, res, next) => {
+  const { talk: { watchedAt } } = req.body;
+ const regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+ // regex gerado no website: https://www.regextester.com/99555
+ const lastWatchedValidation = regex.test(watchedAt);
+   if (!lastWatchedValidation) {
+   return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+   }
+
+next();  
+};
+
 const validateRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
   if (rate < 1 || rate > 5) {
