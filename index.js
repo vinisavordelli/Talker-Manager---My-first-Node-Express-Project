@@ -89,6 +89,17 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(200).json(talker);
 });
 
+app.delete('/talker/:id', validateAuth, async (req, res) => {
+  const { id } = req.params;
+ 
+  const allTalkers = await JSON.parse(await fs.readFile(talkersFile));
+ 
+  const talker = await allTalkers.find((currentTalker) => currentTalker.id === parseInt(id, 10));
+ 
+  await fs.writeFile(talkersFile, JSON.stringify(talker));
+  res.status(204).end();
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
