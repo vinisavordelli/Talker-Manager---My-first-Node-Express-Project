@@ -112,6 +112,7 @@ module.exports = {
   validateEmail,
   validatePassword,
   validateAuth,
+  validateAge,
   validateName,
   validateLastWatched,
   validateRate,
