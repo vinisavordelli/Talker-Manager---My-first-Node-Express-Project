@@ -55,6 +55,23 @@ validateRate, async (req, res) => {
   res.status(201).json(newTalker);
 });
 
+app.get('/talker/search', validateAuth, async (req, res) => {
+  const { q } = req.query;
+
+  const talkers = await JSON.parse(await fs.readFile(talkersFile));
+
+  if (!q) {
+    return res.status(200).json(talkers);
+  }
+  const name = q.toLowerCase();
+
+  const filteredTalkers = talkers.filter((tal) => tal.name.toLowerCase().includes(name));
+
+  if (!filteredTalkers) return res.status(200).json([]);
+  
+  return res.status(200).json(filteredTalkers);
+});
+
 app.put('/talker/:id',
 validateAuth,
 validateName,
@@ -98,23 +115,6 @@ app.delete('/talker/:id', validateAuth, async (req, res) => {
  
   await fs.writeFile(talkersFile, JSON.stringify(talker));
   res.status(204).end();
-});
-
-app.get('/talker/search', validateAuth, async (req, res) => {
-  const { q } = req.query;
-
-  const talkers = await JSON.parse(await fs.readFile(talkersFile));
-
-  if (!q) {
-    return res.status(200).json(talkers);
-  }
-  const name = q.toLocaleLowerCase();
-
-  const filteredTalkers = talkers.filter((tal) => tal.name.tolowerCase().includes(name));
-
-  if (!filteredTalkers) return res.status(200).json([]);
-  
-  return res.status(200).json(filteredTalkers);
 });
 
 app.listen(PORT, () => {
