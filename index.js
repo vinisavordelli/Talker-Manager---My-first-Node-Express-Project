@@ -5,6 +5,8 @@ const fs = require('fs').promises;
 const app = express();
 app.use(bodyParser.json());
 
+const { validateEmail, validatePassword } = require('./middlewares/loginValidations');
+
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = '3000';
@@ -12,6 +14,10 @@ const PORT = '3000';
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
+});
+
+app.post('/login', validateEmail, validatePassword, async (_req, res) => {
+  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
 });
 
 app.get('/talker', async (_req, res) => {
