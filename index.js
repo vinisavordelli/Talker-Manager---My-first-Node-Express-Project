@@ -53,6 +53,25 @@ validateRate, async (req, res) => {
   res.status(201).json(newTalker);
 });
 
+app.put('/talker/:id',
+validateAuth,
+validateName,
+validateAge,
+validateTalk,
+validateLastWatched,
+validateRate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+
+  const talkers = await JSON.parse(await fs.readFile('./talker.json'));
+
+  const identifier = talkers.findIndex((talker) => talker.id === +id);
+  talkers[identifier] = { id: +id, name, age, talk };
+
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  res.status(200).json(talkers[identifier]);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
 
