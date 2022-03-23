@@ -100,6 +100,23 @@ app.delete('/talker/:id', validateAuth, async (req, res) => {
   res.status(204).end();
 });
 
+app.get('/talker/search', validateAuth, async (req, res) => {
+  const { q } = req.query;
+
+  const talkers = await JSON.parse(await fs.readFile(talkersFile));
+
+  if (!q) {
+    return res.status(200).json(talkers);
+  }
+  const name = q.toLocaleLowerCase();
+
+  const filteredTalkers = talkers.filter((tal) => tal.name.tolowerCase().includes(name));
+
+  if (!filteredTalkers) return res.status(200).json([]);
+  
+  return res.status(200).json(filteredTalkers);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
