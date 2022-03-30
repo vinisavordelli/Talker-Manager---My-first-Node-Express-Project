@@ -1,6 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const crypto = require('crypto');
+
+function generateToken() {
+  return crypto.randomBytes(8).toString('hex');
+}
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,7 +33,8 @@ app.get('/', (_request, response) => {
 });
 
 app.post('/login', validateEmail, validatePassword, async (_req, res) => {
-  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
+  res.status(200).json({ token: generateToken() });
+  // a função generateToken() foi feita com base nos exercícios do dia 22.4
 });
 
 app.get('/talker', async (_req, res) => {
